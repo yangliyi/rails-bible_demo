@@ -34,6 +34,9 @@ ActiveRecord::Schema.define(version: 20150923122621) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "event_groupships", ["event_id"], name: "index_event_groupships_on_event_id"
+  add_index "event_groupships", ["group_id"], name: "index_event_groupships_on_group_id"
+
   create_table "events", force: :cascade do |t|
     t.string   "name"
     t.text     "description"

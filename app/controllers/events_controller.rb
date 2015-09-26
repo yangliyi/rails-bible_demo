@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
 
-  before_action :set_event, :only => [:show, :edit, :update, :destroy]
+  before_action :set_event, :only => [:show, :dashboard, :edit, :update, :destroy]
 
   #GET /events/index
   #GET /events
@@ -21,6 +21,24 @@ class EventsController < ApplicationController
       end
   end
 
+  # GET /events/latest
+  def latest
+    @events = Event.order("id DESC").limit(3)
+  end
+
+  # POST /events/bulk_update
+  def bulk_update
+    ids = Array( params[:ids] )
+    events = ids.map { |i| Event.find_by_id(i) }.compact
+
+    if params[:commit] == "Delete"
+      events.each { |e| e.destroy }
+    elsif params[:commit] == "Publish"
+      events.each { |e| e.update(status: "Published") }
+    end
+    redirect_to :back
+  end
+
   #GET /events/:id
   def show
     @page_title = @event.name
@@ -33,7 +51,10 @@ class EventsController < ApplicationController
     end
   end
 
+  #GET /event/:id/dashboard
+  def dashboard
 
+  end
   #GET /events/new
   def new
     @event = Event.new
@@ -85,7 +106,8 @@ class EventsController < ApplicationController
   private
 
   def event_params
-  params.require(:event).permit(:name, :description)
+  params.require(:event).permit(:name, :description, :category_id, :status,
+                                group_ids: [])
   end
 
 end

@@ -1,14 +1,24 @@
 <h1>Event List</h1>
 
+<p>
+  <%= link_to 'Latest events', latest_events_path, class: "btn btn-info" %>
+</p>
+
+<%= form_tag bulk_update_events_path do %>
+
 <table class="table">
 <% @events.each do |event| %>
 
   <tr>
     <td>
+    <%= check_box_tag "ids[]", event.id, false %>
+
     <%= event.name %>
     </td>
     <td>
     <%= link_to "Show", event_path(event), :class => "btn btn-primary" %>
+
+    <%= link_to "Dashboard", dashboard_event_path(event), class: "btn btn-primary" %>
 
     <%= link_to "Attendees", event_attendees_path(event), :class => "btn btn-primary" %>
 
@@ -18,11 +28,16 @@
 
     <%= link_to "Edit", edit_event_path(event), :class => "btn btn-default" %>
 
-    <%= link_to "Delete", event_path(event), :method => :delete, :class => "btn btn-danger" %>
+    <%= link_to "Delete", event_path(event), :method => :delete, data: { confirm: "Are you sure?" }, :class => "btn btn-danger" %>
     </td>
   </tr>
   <% end %>
 </table>
+
+  <%= submit_tag "Delete" , class: "btn btn-danger"%>
+  <%= submit_tag "Publish", class: "btn btn-primary" %>
+
+<% end %>
 
 <%= link_to "New Event", new_event_path, :class => "btn btn-primary" %>
 
