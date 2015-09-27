@@ -4,7 +4,15 @@
   <%= link_to 'Latest events', latest_events_path, class: "btn btn-info" %>
 </p>
 
+<%= form_tag events_path, :method => :get do %>
+  <%= text_field_tag "keyword" %>
+  <%= submit_tag "Search", class: "btn btn-default"%>
+<% end %>
+
 <%= form_tag bulk_update_events_path do %>
+
+<%= link_to 'Sort by Name', events_path( :order => "name") %>
+<%= link_to 'Sort by Default', events_path %>
 
 <table class="table">
 <% @events.each do |event| %>

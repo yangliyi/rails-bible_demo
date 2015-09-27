@@ -5,7 +5,19 @@ class EventsController < ApplicationController
   #GET /events/index
   #GET /events
   def index
-    @events = Event.page(params[:page]).per(5)
+
+    if params[:keyword]
+      @events = Event.where( [ "name like ?", "%#{params[:keyword]}%" ] )
+    else
+      @events = Event.all
+    end
+
+    if params[:order]
+      sort_by = (params[:order] == 'name') ? 'name' : 'id'
+      @events = @events.order(sort_by).page(params[:page]).per(5)
+    end
+
+    @events = @events.page(params[:page]).per(5)
 
       respond_to do |format|
       format.html # index.html.erb
@@ -53,7 +65,6 @@ class EventsController < ApplicationController
 
   #GET /event/:id/dashboard
   def dashboard
-
   end
   #GET /events/new
   def new
